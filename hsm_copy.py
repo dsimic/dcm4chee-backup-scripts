@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-
+import os
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
 import imp
 
 config = None
+s3conn = None
 
 BASEDIR = os.path.abspath(os.path.realpath(__file__))
 DEF_CONFIG_PATH = os.path.join(BASEDIR, 'config_local.py')
@@ -15,6 +16,7 @@ def load_config(path):
     """
     global config
     config = imp.load_module('.', path)
+    return config
 
 
 def copy_file_to_s3(inpath, remote_path):
