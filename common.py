@@ -1,0 +1,15 @@
+import os
+
+BASEDIR = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
+DEF_CONFIG_PATH = os.path.join(BASEDIR, 'config_local.py')
+
+config = None
+
+
+def load_config(path):
+    """
+    """
+    import imp
+    global config
+    config = imp.load_source('', path)
+    return config

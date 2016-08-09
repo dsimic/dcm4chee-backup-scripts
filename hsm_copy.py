@@ -7,16 +7,14 @@ import imp
 config = None
 s3conn = None
 
-BASEDIR = os.path.abspath(os.path.realpath(__file__))
-DEF_CONFIG_PATH = os.path.join(BASEDIR, 'config_local.py')
+BASEDIR = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 
 
-def load_config(path):
-    """
-    """
-    global config
-    config = imp.load_module('.', path)
-    return config
+def load_common():
+    common = imp.load_source('', os.path.join(BASEDIR, 'common.py'))
+    return common
+
+common = load_common()
 
 
 def copy_file_to_s3(inpath, remote_path):
@@ -36,10 +34,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--in-tar", required=True, type=str)
     parser.add_argument('--dest', type=str)
-    parser.add_argument('--config', default=DEF_CONFIG_PATH, type=str)
+    parser.add_argument('--config', default=common.DEF_CONFIG_PATH, type=str)
     args = parser.parse_args()
 
-    load_config(args.config)
+    common.load_config(args.config)
+    config = common.config
 
     s3conn = S3Connection(
         config.AWS_ACCESS_KEY_ID, config.AWS_SECRET_KEY)

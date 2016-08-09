@@ -4,19 +4,16 @@ from boto.s3.connection import S3Connection
 import os
 import imp
 
-config = None
 s3conn = None
 
-BASEDIR = os.path.abspath(os.path.realpath(__file__))
-DEF_CONFIG_PATH = os.path.join(BASEDIR, 'config_local.py')
+BASEDIR = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 
 
-def load_config(path):
-    """
-    """
-    global config
-    config = imp.load_module('.', path)
-    return config
+def load_common():
+    common = imp.load_source('', os.path.join(BASEDIR, 'common.py'))
+    return common
+
+common = load_common()
 
 
 def fetch_from_s3(remote_path, dest_file):
@@ -35,10 +32,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--remote-path", required=True, type=str)
     parser.add_argument("--dest", required=True, type=str)
-    parser.add_argument('--config', default=DEF_CONFIG_PATH, type=str)
+    parser.add_argument('--config', default=common.DEF_CONFIG_PATH, type=str)
     args = parser.parse_args()
 
-    load_config(args.config)
+    common.load_config(args.config)
+    config = common.config
 
     s3conn = S3Connection(
         config.AWS_ACCESS_KEY_ID, config.AWS_SECRET_KEY)
