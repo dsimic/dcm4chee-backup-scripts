@@ -26,3 +26,8 @@ This script is in charge of fetching the archive from the back up location. It
 gets called when a study is requested and the online copy exists in nearline,
 or if the SynFileStatus service is configured to check the integrity of the tar
 archive (ie: the “VerifyTar” is set to True).
+
+
+## Sample usage
+
+python hsm_copy.py --in-tar $PATH_TO_TARBALL --dest $AWS_S3_OBJECT_KEY

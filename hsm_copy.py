@@ -33,8 +33,12 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--in-tar", required=True, type=str)
-    parser.add_argument('--dest', type=str)
-    parser.add_argument('--config', default=common.DEF_CONFIG_PATH, type=str)
+    parser.add_argument('--dest', type=str, help='AWS S3 object key')
+    parser.add_argument(
+        '--config', default=common.DEF_CONFIG_PATH, type=str,
+        help='Path to config containing AWS auth info, default is %s' %
+        common.DEF_CONFIG_PATH
+    )
     args = parser.parse_args()
 
     common.load_config(args.config)
